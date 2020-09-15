@@ -6,29 +6,29 @@ pygame.font.init()
 
 
 class Grid:
-    # board = [
-    #     [7, 8, 0, 4, 0, 0, 1, 2, 0],
-    #     [6, 0, 0, 0, 7, 5, 0, 0, 9],
-    #     [0, 0, 0, 6, 0, 1, 0, 7, 8],
-    #     [0, 0, 7, 0, 4, 0, 2, 6, 0],
-    #     [0, 0, 1, 0, 5, 0, 9, 3, 0],
-    #     [9, 0, 4, 0, 6, 0, 0, 0, 5],
-    #     [0, 7, 0, 3, 0, 0, 0, 1, 2],
-    #     [1, 2, 0, 0, 0, 7, 4, 0, 0],
-    #     [0, 4, 9, 2, 0, 6, 0, 0, 7]
-    # ]
-
     board = [
-        [0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0]
+        [7, 8, 0, 4, 0, 0, 1, 2, 0],
+        [6, 0, 0, 0, 7, 5, 0, 0, 9],
+        [0, 0, 0, 6, 0, 1, 0, 7, 8],
+        [0, 0, 7, 0, 4, 0, 2, 6, 0],
+        [0, 0, 1, 0, 5, 0, 9, 3, 0],
+        [9, 0, 4, 0, 6, 0, 0, 0, 5],
+        [0, 7, 0, 3, 0, 0, 0, 1, 2],
+        [1, 2, 0, 0, 0, 7, 4, 0, 0],
+        [0, 4, 9, 2, 0, 6, 0, 0, 7]
     ]
+
+    # board = [
+    #     [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    #     [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    #     [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    #     [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    #     [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    #     [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    #     [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    #     [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    #     [0, 0, 0, 0, 0, 0, 0, 0, 0]
+    # ]
 
     def __init__(self, rows, cols, width, height, win):
         self.rows = rows
@@ -51,8 +51,9 @@ class Grid:
             self.update_model()
 
             sudoku_solver = solver.solve_sudoku
+            is_valid = solver.validateNumber
 
-            if valid(self.model, val, (row,col)) and sudoku_solver(self.board):
+            if is_valid(self.model, val, col, row) and sudoku_solver(self.board):
                 return True
             else:
                 self.cubes[row][col].set(0)
@@ -122,8 +123,9 @@ class Grid:
         else:
             row, col = find
 
+        is_valid = solver.validateNumber
         for i in range(1, 10):
-            if valid(self.model, i, (row, col)):
+            if is_valid(self.model, i, col, row):
                 self.model[row][col] = i
                 self.cubes[row][col].set(i)
                 self.cubes[row][col].draw_change(self.win, True)
@@ -204,29 +206,6 @@ def find_empty(bo):
                 return (i, j)  # row, col
 
     return None
-
-
-def valid(bo, num, pos):
-    # Check row
-    for i in range(len(bo[0])):
-        if bo[pos[0]][i] == num and pos[1] != i:
-            return False
-
-    # Check column
-    for i in range(len(bo)):
-        if bo[i][pos[1]] == num and pos[0] != i:
-            return False
-
-    # Check box
-    box_x = pos[1] // 3
-    box_y = pos[0] // 3
-
-    for i in range(box_y*3, box_y*3 + 3):
-        for j in range(box_x * 3, box_x*3 + 3):
-            if bo[i][j] == num and (i,j) != pos:
-                return False
-
-    return True
 
 
 def redraw_window(win, board, time, strikes):
