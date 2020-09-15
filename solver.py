@@ -15,9 +15,9 @@ def print_line(grid):
 
 def validateNumber(grid, number, posX, posY):
     for i in range(9):
-        if grid[posY][i] == number:
+        if grid[posY][i] == number and posX != i:
             return False
-        if grid[i][posX] == number:
+        if grid[i][posX] == number and posY != i:
             return False
     quadrantX = posX // 3
     quadrantY = posY // 3
