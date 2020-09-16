@@ -90,6 +90,11 @@ class Grid:
         self.cubes[row][col].selected = True
         self.selected = (row, col)
 
+    def deselect_all(self):
+        for i in range(self.rows):
+            for j in range(self.cols):
+                self.cubes[i][j].selected = False
+
     def clear(self):
         row, col = self.selected
         if self.cubes[row][col].value == 0:
@@ -242,6 +247,7 @@ def main():
     run = True
     start = time.time()
     strikes = 0
+    play_mode = False
     while run:
 
         play_time = round(time.time() - start)
@@ -288,13 +294,17 @@ def main():
                 if event.key == pygame.K_DELETE:
                     board.clear()
                     key = None
+                if event.key == pygame.K_p:
+                    play_mode = True
 
-                if event.key == pygame.K_SPACE:
+                if event.key == pygame.K_SPACE and play_mode:
+                    board.deselect_all()
+                    board.draw()
                     board.solve_gui()
 
                 if event.key == pygame.K_RETURN:
                     i, j = board.selected
-                    if board.cubes[i][j].temp != 0:
+                    if board.cubes[i][j].temp != 0 and play_mode:
                         if board.place(board.cubes[i][j].temp):
                             print("Success")
                         else:
@@ -304,6 +314,9 @@ def main():
 
                         if board.is_finished():
                             print("Game over")
+                    elif not play_mode:
+                        board.place(board.cubes[i][j].temp)
+                        key = None
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 pos = pygame.mouse.get_pos()
