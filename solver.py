@@ -23,7 +23,7 @@ def validateNumber(grid, number, posX, posY):
     quadrantY = posY // 3
     for j in range(3):
         for k in range(3):
-            if grid[(quadrantY * 3) + j][(quadrantX * 3) + k] == number and k != posX and j != posY:
+            if grid[(quadrantY * 3) + j][(quadrantX * 3) + k] == number and ((quadrantX * 3) + k) != posX and ((quadrantY * 3) + j) != posY:
                 return False
     return True
 
